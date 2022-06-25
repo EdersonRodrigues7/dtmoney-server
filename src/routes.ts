@@ -11,10 +11,12 @@ routes.get('/transactions', async (req, res) => {
 });
 
 routes.post('/transactions', async (req, res) => {
-  const { title, type, category, amount, createdAt } = req.body;
+  let { title, type, category, amount, createdAt } = req.body;
   try {
     const newTransaction = new PrismaTransactionModel();
     const transactionController = new TransactionController(newTransaction);
+    createdAt = new Date(createdAt);
+    console.log(createdAt);
     await transactionController.addTransaction({ title, type, category, amount, createdAt });
 
     return res.status(201).send();

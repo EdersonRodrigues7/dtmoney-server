@@ -13,7 +13,7 @@ model Transaction {
   type      String
   category  String
   amount    Float
-  createdAt DateTime @default(now())
+  createdAt DateTime
 
   @@map("transactions")
 }
