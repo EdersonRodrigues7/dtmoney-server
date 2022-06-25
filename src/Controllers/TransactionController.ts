@@ -5,7 +5,7 @@ interface TransactionControllerRequest {
   type: string;
   category: string;
   amount: number;
-  createdAt: Date;
+  createdAt?: Date;
 }
 
 export class TransactionController {
