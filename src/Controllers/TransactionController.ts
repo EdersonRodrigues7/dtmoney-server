@@ -20,4 +20,8 @@ export class TransactionController {
       createdAt
     });
   }
+  async getLastTransaction() {
+    const lastTransaction = await this.transaction.getLast();
+    return lastTransaction;
+  }
 }
