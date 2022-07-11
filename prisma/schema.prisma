@@ -7,13 +7,48 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id              String           @id @default(uuid())
+  name            String
+  email           String
+  password        String
+  transactions    Transaction[]
+  payment_methods Payment_Method[]
+
+  @@map("users")
+}
+
 model Transaction {
-  id        Int      @id @default(autoincrement())
-  title     String
-  type      String
-  category  String
-  amount    Float
-  createdAt DateTime
+  id                Int            @id @default(autoincrement())
+  title             String
+  type              String
+  category_id       Int
+  category          Category       @relation(fields: [category_id], references: [id])
+  payment_method_id Int
+  payment_method    Payment_Method @relation(fields: [payment_method_id], references: [id])
+  amount            Float
+  createdAt         DateTime
+  user_id           String
+  user              User           @relation(fields: [user_id], references: [id])
 
   @@map("transactions")
+}
+
+model Category {
+  id           Int           @id @default(autoincrement())
+  name         String        @unique
+  transactions Transaction[]
+
+  @@map("categories")
+}
+
+model Payment_Method {
+  id           Int           @id @default(autoincrement())
+  name         String
+  type         String
+  user_id      String
+  user         User          @relation(fields: [user_id], references: [id])
+  transactions Transaction[]
+
+  @@map("payment_methods")
 }
