@@ -3,24 +3,36 @@ import { PrismaTransactionModel } from './Models/PrismaModels/PrismaTransaction'
 import { TransactionController } from './Controllers/TransactionController';
 import { PrismaCategoryModel } from './Models/PrismaModels/PrismaCategory';
 import { CategoryController } from './Controllers/CategoryController';
+import { PrismaUserModel } from './Models/PrismaModels/PrismaUser';
+import { UserController } from './Controllers/Auth/UserController';
 
 export const routes = express.Router();
 
 //Users
 routes.post('/register', async (req, res) => {
-  const answer = {
-    user: { id: 1, name: req.body.name, email: req.body.email },
-    token: '315461846154'
-  };
-  return res.status(200).send(answer);
+  const { name, email, password } = req.body;
+  try {
+    const newUser = new PrismaUserModel();
+    const controller = new UserController(newUser);
+    const answer = await controller.register({ name, email, password });
+    return res.status(200).send(answer);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send();
+  }
 });
 
 routes.post('/login', async (req, res) => {
-  const answer = {
-    user: { id: 1, name: req.body.name, email: req.body.email },
-    token: '315461846154'
-  };
-  return res.status(200).send(answer);
+  const { email, password } = req.body;
+  try {
+    const newUser = new PrismaUserModel();
+    const controller = new UserController(newUser);
+    const answer = await controller.login(email, password);
+    return res.status(200).send(answer);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send();
+  }
 });
 
 routes.post('/validate', async (req, res) => {
