@@ -1,8 +1,6 @@
 import { UserData, UserModel } from '../../Models/User';
 import { TokenController } from './TokenController';
 
-// UserNotFoundException
-
 type UserControllerResponse = {
   user: UserData | null;
   token: Promise<string> | string;
@@ -17,7 +15,6 @@ export class UserController {
       return { user: newUser, token: token };
     }
     return null;
-    // return { user: null, token: '' };
   }
   async login(email: string, password: string): Promise<UserControllerResponse> {
     const currentUser = await this.user.login(email, password);
@@ -26,7 +23,6 @@ export class UserController {
       const token = validate.createNewToken(currentUser.id);
       return { user: currentUser, token: token };
     }
-    // throw new Error('User not found');
     return null;
   }
   private async createUserToken(newUser: UserData): Promise<string> {

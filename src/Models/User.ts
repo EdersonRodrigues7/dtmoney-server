@@ -14,7 +14,7 @@ export interface UserData {
 export interface UserModel {
   register: (user: UserData) => Promise<UserData | null>;
   login: (email: string, password: string) => Promise<UserData | null>;
-  logout: () => Promise<void>;
+  logout: (id: string) => Promise<void>;
   setToken: (token: string, id?: string) => Promise<void>;
   getUser: (email?: string, token?: string) => Promise<UserData | null>;
 }

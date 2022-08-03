@@ -12,6 +12,11 @@ export class TokenController {
     }
     return '';
   }
+  static async deleteToken(id: string): Promise<void> {
+    const modelToken = new PrismaUserModel();
+    await modelToken.logout(id);
+    return;
+  }
   async validateToken(testToken: string): Promise<UserData | null> {
     if (this.apiToken && testToken.includes(this.apiToken)) {
       const validUser = await this.userModel.getUser('', testToken);

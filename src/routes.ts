@@ -50,8 +50,14 @@ routes.post('/validate', async (req, res) => {
 });
 
 routes.post('/logout', (req, res) => {
-  res.status(200).send();
-  // return { status: true };
+  const id: string = req.body.id;
+  try {
+    TokenController.deleteToken(id);
+    res.status(200).send();
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send();
+  }
 });
 
 //Categories

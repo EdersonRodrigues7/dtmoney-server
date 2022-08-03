@@ -24,7 +24,16 @@ export class PrismaUserModel implements UserModel {
     if (!response) return null;
     return response;
   }
-  async logout(): Promise<void> {}
+  async logout(id: string): Promise<void> {
+    await prisma.user.update({
+      where: {
+        id: id
+      },
+      data: {
+        token: null
+      }
+    });
+  }
   async setToken(token: string, id?: string): Promise<void> {
     await prisma.user.update({
       where: {
@@ -41,7 +50,6 @@ export class PrismaUserModel implements UserModel {
         OR: [{ email: email }, { token: token }]
       }
     });
-    console.log(`Target User: ${targetUser}`);
     return targetUser;
   }
 }
