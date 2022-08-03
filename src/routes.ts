@@ -5,6 +5,7 @@ import { PrismaCategoryModel } from './Models/PrismaModels/PrismaCategory';
 import { CategoryController } from './Controllers/CategoryController';
 import { PrismaUserModel } from './Models/PrismaModels/PrismaUser';
 import { UserController } from './Controllers/Auth/UserController';
+import { TokenController } from './Controllers/Auth/TokenController';
 
 export const routes = express.Router();
 
@@ -28,18 +29,24 @@ routes.post('/login', async (req, res) => {
     const newUser = new PrismaUserModel();
     const controller = new UserController(newUser);
     const answer = await controller.login(email, password);
+    if (answer === null) throw new Error('User not Found');
+    return res.status(200).send(answer);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error);
+  }
+});
+
+routes.post('/validate', async (req, res) => {
+  const testToken: string = req.body.token;
+  const controller = new TokenController();
+  try {
+    const answer = await controller.validateToken(testToken);
     return res.status(200).send(answer);
   } catch (error) {
     console.log(error);
     return res.status(500).send();
   }
-});
-
-routes.post('/validate', async (req, res) => {
-  const answer = {
-    user: { id: 1, name: 'Ederson', email: 'dede@gmail.com' }
-  };
-  return res.status(200).send(answer);
 });
 
 routes.post('/logout', (req, res) => {

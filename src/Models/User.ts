@@ -6,6 +6,7 @@ export interface UserData {
   name: string;
   email: string;
   password: string;
+  token?: string | null;
   transactions?: TransactionData[];
   payment_methods?: PaymentMethodData[];
 }
@@ -14,5 +15,6 @@ export interface UserModel {
   register: (user: UserData) => Promise<UserData | null>;
   login: (email: string, password: string) => Promise<UserData | null>;
   logout: () => Promise<void>;
-  getUser: (email: string, password: string) => Promise<UserData | null>;
+  setToken: (token: string, id?: string) => Promise<void>;
+  getUser: (email?: string, token?: string) => Promise<UserData | null>;
 }

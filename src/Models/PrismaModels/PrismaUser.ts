@@ -1,6 +1,4 @@
 import { UserData, UserModel } from '../User';
-import { PaymentMethodData } from '../PaymentMethod';
-import { TransactionData } from '../Transaction';
 import { prisma } from '../../prisma';
 
 export class PrismaUserModel implements UserModel {
@@ -12,21 +10,38 @@ export class PrismaUserModel implements UserModel {
         password
       }
     });
-    const response = await this.getUser(email, password);
+    const response = await this.getUser(email);
     return response;
   }
   async login(email: string, password: string): Promise<UserData | null> {
-    const response = await this.getUser(email, password);
-    return response;
-  }
-  async logout(): Promise<void> {}
-  async getUser(email: string, password: string): Promise<UserData | null> {
-    const newUser = await prisma.user.findFirst({
+    const response = await prisma.user.findFirst({
       where: {
         email: email,
         password: password
       }
     });
-    return newUser;
+    console.log(response);
+    if (!response) return null;
+    return response;
+  }
+  async logout(): Promise<void> {}
+  async setToken(token: string, id?: string): Promise<void> {
+    await prisma.user.update({
+      where: {
+        id: id
+      },
+      data: {
+        token: token
+      }
+    });
+  }
+  async getUser(email?: string, token?: string): Promise<UserData | null> {
+    const targetUser = await prisma.user.findFirst({
+      where: {
+        OR: [{ email: email }, { token: token }]
+      }
+    });
+    console.log(`Target User: ${targetUser}`);
+    return targetUser;
   }
 }
